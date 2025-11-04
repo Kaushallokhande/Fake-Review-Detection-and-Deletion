@@ -1,73 +1,69 @@
-# Welcome to your Lovable project
+# Review Authenticity Analysis System
 
-## Project info
+## Overview
 
-**URL**: https://lovable.dev/projects/8ad09f4d-d845-41a4-ba8a-734ed0b8cdb1
+The **Consumer Sales Fake Review Detection and Deletion** is an AI-powered platform designed to detect fake, AI-generated, or promotional reviews in bulk datasets. It enables organizations to assess the credibility of reviews through a series of NLP and AI-driven evaluations. Each review is processed through multiple analytical layers such as sentiment classification, AI content probability, spam detection, link and keyword extraction, and overall authenticity scoring.
 
-## How can I edit this code?
+The system organizes reviews in batches, processes them asynchronously, and provides visual insights, filtering capabilities, and export options through a user-friendly dashboard.
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## Objectives
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/8ad09f4d-d845-41a4-ba8a-734ed0b8cdb1) and start prompting.
+1. Detect suspicious or artificially generated reviews.
+2. Classify review sentiment and assess rating-text consistency.
+3. Identify spam, links, and promotional content.
+4. Compute an authenticity score to categorize reviews as genuine or suspicious.
+5. Provide analytics through visual dashboards and batch-level summaries.
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## Architecture
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+* **Frontend:** React.js with Vite and TailwindCSS
+* **Backend:** Node.js with Express.js
+* **Database:** MongoDB
+* **AI Models:** Hugging Face transformers (for NLP tasks) and fine-tuned AI content detection models
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
+## Core Functionalities
 
-Follow these steps:
+1. **Sentiment and Consistency Analysis:**
+   Compares the expressed sentiment with the numerical rating to identify inconsistent or misleading reviews.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+2. **Named Entity Recognition (NER):**
+   Detects organizations, products, and promotional mentions to flag marketing-based content.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+3. **Spam and Link Detection:**
+   Uses regex and NLP filters to identify links or repetitive promotional keywords.
+   
+5. **AI Content Detection:**
+   Identifies potential AI-generated reviews using fine-tuned language models that assess perplexity, coherence, and writing entropy.
+   
+6. **Authenticity Scoring:**
+   Combines multiple features (AI probability, sentiment coherence, keyword density) into a composite authenticity score.
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+## Frontend Features
 
-**Edit a file directly in GitHub**
+* Interactive dashboard displaying batch-level statistics.
+* Review-level analytics including sentiment, AI score, and authenticity score.
+* Filtering and search functionality within the “Detailed Review Analysis” table.
+* Select, select-all, download, and delete actions for reviews.
+* Graphical visualization of sentiment distribution, authenticity ratio, and detection metrics.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## Future Enhancements
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+* Integration with real-time review APIs (Amazon, Flipkart, Yelp).
+* Improved AI-detection accuracy with multilingual model support.
+* Automated retraining pipelines for adaptive model learning.
+* Role-based user access and batch sharing functionality.
 
-## What technologies are used for this project?
+---
 
-This project is built with:
+## License
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/8ad09f4d-d845-41a4-ba8a-734ed0b8cdb1) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+This project is for academic and research purposes. Unauthorized redistribution of any proprietary model or dataset is prohibited.
