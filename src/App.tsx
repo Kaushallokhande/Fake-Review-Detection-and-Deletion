@@ -35,7 +35,6 @@ const App = () => (
           <Route path="/dashboard/reviews" element={<MyReviews />} />
           <Route path="/dashboard/add" element={<AddReview />} />
           
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
