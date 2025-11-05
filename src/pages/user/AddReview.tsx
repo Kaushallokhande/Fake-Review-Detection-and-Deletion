@@ -6,24 +6,24 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { Upload, FileArchive, FileCode } from "lucide-react";
-
+import { Upload, FileArchive, FileCode, Loader2 } from "lucide-react";
 
 const AddReview = () => {
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [showSlowMsg, setShowSlowMsg] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const fileType = file.name.toLowerCase();
-      if (fileType.endsWith('.zip') || fileType.endsWith('.xml') || fileType.endsWith('.json')) {
+      if (fileType.endsWith(".zip") || fileType.endsWith(".xml") || fileType.endsWith(".json")) {
         setSelectedFile(file);
         toast.success(`File "${file.name}" selected`);
       } else {
         toast.error("Please upload a ZIP, XML, or JSON file");
-        e.target.value = '';
+        e.target.value = "";
       }
     }
   };
@@ -37,44 +37,63 @@ const AddReview = () => {
     }
 
     setIsUploading(true);
+    setShowSlowMsg(false);
+
+    // Show full-screen slow network message after 7 seconds
+    const slowTimer = setTimeout(() => {
+      setShowSlowMsg(true);
+      // Auto-hide message after 5 seconds
+      setTimeout(() => setShowSlowMsg(false), 5000);
+    }, 7000);
 
     try {
       const fileText = await selectedFile.text();
       const parsedReviews = JSON.parse(fileText);
 
-      // Step 2: Prepare JSON body
       const payload = {
         batch_name: selectedFile.name,
         reviews: parsedReviews.reviews,
       };
 
-      // Step 3: Send JSON to backend
       const response = await fetch("https://backend-fake-review-detection.onrender.com/reviews", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+
+      clearTimeout(slowTimer);
 
       if (!response.ok) throw new Error("Upload failed");
       const data = await response.json();
 
       console.log("Backend response:", data);
       toast.success("File uploaded successfully! Analysis started.");
-      navigate("/dashboard/queue");
-      
+      navigate("/dashboard");
     } catch (error) {
       console.error("Upload failed:", error);
       toast.error("Invalid or malformed file. Please try again.");
     } finally {
+      clearTimeout(slowTimer);
       setIsUploading(false);
+      setShowSlowMsg(false);
     }
   };
 
-
   return (
     <DashboardLayout>
+      {/* Full-screen slow network overlay */}
+      {showSlowMsg && (
+        <div className="fixed inset-0 bg-black/70 flex flex-col items-center justify-center z-50 animate-fadeIn">
+          <Loader2 className="h-12 w-12 text-white animate-spin mb-4" />
+          <h2 className="text-white text-xl font-semibold">
+            Your internet seems a bit slow...
+          </h2>
+          <p className="text-gray-300 mt-2 text-sm">
+            Please wait while we upload and analyze your reviews.
+          </p>
+        </div>
+      )}
+
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold">Upload Reviews for Analysis</h1>
@@ -103,7 +122,7 @@ const AddReview = () => {
 
                 {selectedFile && (
                   <div className="flex items-center gap-2 p-3 bg-accent rounded-lg">
-                    {selectedFile.name.endsWith('.zip') ? (
+                    {selectedFile.name.endsWith(".zip") ? (
                       <FileArchive className="h-5 w-5 text-primary" />
                     ) : (
                       <FileCode className="h-5 w-5 text-primary" />
