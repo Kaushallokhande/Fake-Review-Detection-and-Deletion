@@ -9,6 +9,13 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ArrowLeft, Download, Trash2, Search, CheckCircle2, XCircle } from "lucide-react";
 import { toast } from "sonner";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider
+} from "@/components/ui/tooltip";
+
 
 interface Review {
   _id: string;
@@ -237,17 +244,24 @@ const BatchDetail = () => {
                       <TableCell>{review.rating}/5</TableCell>
                       <TableCell>
                         <Badge
-                          variant={
+                          className={
                             review.sentiment.label === "POSITIVE"
-                              ? "default"
+                              ? "bg-green-600 text-white"
                               : review.sentiment.label === "NEGATIVE"
-                              ? "destructive"
-                              : "secondary"
+                                ? "bg-red-600 text-white"
+                                : "bg-gray-500 text-white"   // Unknown → Neutral Gray
                           }
                         >
-                          {review.sentiment.label}
+                          {review.sentiment.label === "POSITIVE"
+                            ? "Positive"
+                            : review.sentiment.label === "NEGATIVE"
+                              ? "Negative"
+                              : "Neutral"
+                          }
                         </Badge>
                       </TableCell>
+
+
                       <TableCell>{(review.ai_detection.ai_probability * 100).toFixed(0)}%</TableCell>
                       <TableCell>{review.spam_detection.score}%</TableCell>
                       <TableCell>{review.link_detection.has_link ? "Yes" : "-"}</TableCell>
@@ -260,17 +274,45 @@ const BatchDetail = () => {
                         )}
                       </TableCell>
                       <TableCell>
-                        <Progress value={review.authenticity.score * 100} className="w-16 h-2" />
-                      </TableCell>
+  <TooltipProvider delayDuration={100}>
+    <Tooltip>
+      <TooltipTrigger>
+        <div>
+          <Progress
+            value={review.authenticity.score * 100}
+            className="w-16 h-2 cursor-pointer"
+          />
+        </div>
+      </TooltipTrigger>
+
+      <TooltipContent side="top" align="center">
+        <p>{(review.authenticity.score * 100).toFixed(1)}%</p>
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+</TableCell>
+
+
                       <TableCell>
                         <Badge
-                          variant={
-                            review.authenticity.status.includes("authentic") ? "default" : "destructive"
+                          className={
+                            review.authenticity.status === "highly_authentic"
+                              ? "bg-green-600 text-white"
+                              : review.authenticity.status === "moderately_authentic"
+                                ? "bg-yellow-500 text-black"
+                                : "bg-red-600 text-white"
                           }
                         >
-                          {review.authenticity.status}
+                          {review.authenticity.status === "highly_authentic"
+                            ? "High"
+                            : review.authenticity.status === "moderately_authentic"
+                              ? "Moderate"
+                              : "Suspicious"}
                         </Badge>
                       </TableCell>
+
+
+
                     </TableRow>
                   ))}
                 </TableBody>
